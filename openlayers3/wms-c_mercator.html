@@ -3,15 +3,15 @@
 
 </script>
 <title>Test av cache klient ol3 EPSG:3857</title>
-<style type="text/css">
-p {width: 500px;}
-div.olControlMousePosition {font-family: Verdana; font-weight: bold; font-size: 0.2em; color: black;}
-body {border: 2px; margin: 5px; padding: 0px; color: black;}
-#map { width: 1000px; height: 600px; border: 2px solid blue;}
-</style>
-<script src="http://ol3js.org/en/master/build/ol.js" type="text/javascript"></script>
-<!-- script src="http://ol3js.org/en/master/build/ol-debug.js" type="text/javascript"></script -->
-
+<link rel="stylesheet" href="http://openlayers.org/en/v3.0.0/css/ol.css" type="text/css">
+		<style>
+			.map {
+				height: 600px;
+				width: 100%;
+				border: 2px solid blue;
+			}
+		</style>
+<script src="http://openlayers.org/en/v3.0.0/build/ol.js" type="text/javascript"></script>
 <script type="text/javascript">
 function init(){
 
@@ -29,7 +29,7 @@ function init(){
 		view: view
 	});
 	//End: Map definitions
-	
+
 	//***********************
 	//Start: WMS-C Kartverket
 	var _url="http://opencache.statkart.no/gatekeeper/gk/gk.open?";
@@ -38,12 +38,12 @@ function init(){
 	var sourceWMSC = new ol.source.TileWMS({
 		url: _url,
 		params: {
-			LAYERS: 'norges_grunnkart', 
+			LAYERS: 'norges_grunnkart',
 			VERSION: '1.1.1'
 		}
 	})
 	//End: source
-	
+
 	//Start: layer
 	var tileLayerWMSC = new ol.layer.Tile({
 		title: "Norges grunnkart",
@@ -60,7 +60,6 @@ function init(){
 </head>
 <body onload="init()">
 <h1>Testklient for cache fra Statens kartverk</h1>
-<div id="map"></div>
+<div id="map" class="map"></div>
 </body>
 </html>
-
