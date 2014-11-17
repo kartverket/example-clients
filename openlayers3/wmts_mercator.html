@@ -1,7 +1,5 @@
 <html>
 <head>
-
-</script>
 <title>Test av cache klient ol3 EPSG:3857</title>
 <link rel="stylesheet" href="http://openlayers.org/en/v3.0.0/css/ol.css" type="text/css">
     <style>
@@ -16,12 +14,13 @@
 function init(){
 
 	//Start: projection & tileGrid definitions
-	sProjection = 'EPSG:3857',
-	projection = ol.proj.get(sProjection),
-	projectionExtent = projection.getExtent(),
-	size = ol.extent.getWidth(projectionExtent) / 256,
-	resolutions = [],
-	matrixIds = [];
+	var sProjection = 'EPSG:3857',
+			projection = ol.proj.get(sProjection),
+			projectionExtent = projection.getExtent(),
+			size = ol.extent.getWidth(projectionExtent) / 256,
+			resolutions = [],
+			matrixIds = [];
+
 	for (var z = 0; z < 15; ++z) {//Max 18?
   		// generate resolutions and matrixIds arrays for this WMTS
   		resolutions[z] = size / Math.pow(2, z);
@@ -34,7 +33,7 @@ function init(){
 		projection: sProjection,
 		center: [1891337, 9772319],
 		zoom: 5
-	})
+	});
 	//End View definitions
 
 	//Start: Map definitions
@@ -59,7 +58,7 @@ function init(){
           matrixIds: matrixIds
         }),
         style: 'default'
-	})
+	});
 	//End: source
 
 	//Start: layer

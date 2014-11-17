@@ -30,14 +30,15 @@ var view = new ol.View({
 
 var projection = new ol.proj.Projection({
   code: sProjection,
-  extent: extent[sProjection],
+  extent: extent[sProjection]
 });
 ol.proj.addProjection(projection);
 
-projectionExtent = projection.getExtent(),
+var projectionExtent = projection.getExtent(),
 size = ol.extent.getWidth(projectionExtent) / 256,
 resolutions = [],
 matrixIds = [];
+
 for (var z = 0; z < 21; ++z) {//Max 18?
 	resolutions[z] = size / Math.pow(2, z);
 	matrixIds[z] = sProjection+":"+z;
