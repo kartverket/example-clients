@@ -27,7 +27,6 @@ function initMap() {
                    timeline: false,
                    geocoder: false,
                    navigationHelpButton: false,
-                   creditContainer: "footer",
                    baseLayerPicker : false,
     });
 
