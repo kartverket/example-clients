@@ -19,87 +19,32 @@
             height: 100%;
             background: #fff;
         }
-
-        .menu {
-            position: absolute;
-            left: 10px;
-            top: 10px;
-            bottom: 10px;
-            width: 600px;
-            background: #ddd;
-            z-index: 3000;
-            background-color: #FFFFFF;
-            border: 1px solid rgba(0, 0, 0, 0.2);
-            overflow-y: hidden;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
-            border-radius: 15px;
-        }
-
-        .min {
-            width: 200px !important;
-            height: 40px !important;
-        }
-
-        .menu .page-header {
-            margin-top: 20px;
-        }
-
-        .menu h1 {
-            font-size: 24px;
-        }
-
-        .content {
-            padding: 5px;
-        }
-
-        .sosi_textarea {
-            width: 100%;
-        }
-
-        .alert {
-            margin-top: 20px;
-        }
-
     </style>
 
 </head>
 <body>
 
-<script type="text/template" id="sosiform">
-    <div class="form-group">
-        <label for="sosidata">SOSI-data or URL</label>
-        <textarea id="sosidata" rows="6" cols="10" class="form-control sosi_textarea">http://beta.norgeskart.no/sosi/kautokeino.sos</textarea>
-    </div>
-    <button type="submit" class="btn btn-default">Parse!</button>
-    <hr/>
-    <div class="form-group">
-        <label for="jsondata">GeoJSON</label>
-        <textarea readonly id="jsondata" rows="3" cols="10" class="form-control sosi_textarea"></textarea>
-    </div>
-
-</script>
-
-
-<script type="text/template" id="menu-panel-template">
-    <div class="panel-heading">SOSI-viewer <span class="resize pull-right glyphicon glyphicon-resize-small"></span></div>
-    <div class="content">
-    </div>
-</script>
-
-
 
 <div id="map" class="map_fullscreen"></div>
 
 <script src="leaflet/leaflet.js"></script>
-<script src="js/proj4.js"></script>
-<script src="js/proj4leaflet.js"></script>
-<script>Proj4js = proj4;</script>
-<script src="js/leafletUtils.js"></script>
+<script src="js/L.TileLayer.Kartverket.min.js"></script>
+
 <script type="text/javascript">
     (function () {
-        var map = L.map('map', { zoomControl: false }).setView([64.5, 10], 5);
-        new L.Control.Zoom({ position: 'topright' }).addTo(map);
-        leafletUtils.SkTiles({layers: "norges_grunnkart"}).addTo(map);
+        var map = L.map('map').setView([64.5, 10], 5);
+
+        var i, layer;
+        var layers = L.tileLayer.kartverket.getLayers();
+        var baseLayers = {};
+        for (i = 0; i < layers.length; i++) {
+            layer = layers[i];
+            baseLayers[layer] = L.tileLayer.kartverket(layer);
+        }
+        baseLayers[layers[0]].addTo(map);
+
+        L.control.layers(baseLayers).addTo(map);
+
     }());
 </script>
 </body>
