@@ -21,22 +21,21 @@ var extent = {
 	'EPSG:32633': [-2500000, 3500000, 3045984, 9045984]
 };
 
-var view = new ol.View({
-		projection: projection,
-		center: [652474, 6945724],
-		zoom: 5
-});
-
 var projection = new ol.proj.Projection({
   code: sProjection,
   extent: extent[sProjection]
 });
 ol.proj.addProjection(projection);
 
-var projectionExtent = projection.getExtent(),
-size = ol.extent.getWidth(projectionExtent) / 256,
-resolutions = [],
-matrixIds = [];
+var view = new ol.View({
+		projection: projection,
+		center: [352474, 6945724],
+		zoom: 4
+});
+
+var projectionExtent = projection.getExtent();
+var size = ol.extent.getWidth(projectionExtent) / 256;
+var resolutions = [], matrixIds = [];
 
 for (var z = 0; z < 21; ++z) {//Max 18?
 	resolutions[z] = size / Math.pow(2, z);
