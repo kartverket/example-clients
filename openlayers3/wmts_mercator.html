@@ -1,81 +1,84 @@
 <html>
+
 <head>
-<title>Test av cache klient ol3 EPSG:3857</title>
-<link rel="stylesheet" href="http://openlayers.org/en/v3.0.0/css/ol.css" type="text/css">
-    <style>
-      .map {
-        height: 600px;
-        width: 100%;
-        border: 2px solid blue;
-      }
-    </style>
-<script src="http://openlayers.org/en/v3.0.0/build/ol.js" type="text/javascript"></script>
-<script type="text/javascript">
-function init(){
+	<title>Test av cache klient ol3 EPSG:3857</title>
+	<link rel="stylesheet" href="http://openlayers.org/en/v3.14.2/css/ol.css" type="text/css">
+	<style>
+		.map {
+			height: 600px;
+			width: 100%;
+			border: 2px solid blue;
+		}
+	</style>
+	<script src="http://openlayers.org/en/v3.14.2/build/ol.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		function init() {
 
-	//Start: projection & tileGrid definitions
-	var sProjection = 'EPSG:3857',
-			projection = ol.proj.get(sProjection),
-			projectionExtent = projection.getExtent(),
-			size = ol.extent.getWidth(projectionExtent) / 256,
-			resolutions = [],
-			matrixIds = [];
+			//Start: projection & tileGrid definitions
+			var sProjection = 'EPSG:3857';
+			var projection = ol.proj.get(sProjection);
+			var projectionExtent = projection.getExtent();
+			var size = ol.extent.getWidth(projectionExtent) / 256;
+			var resolutions = [],
+				matrixIds = [];
 
-	for (var z = 0; z < 15; ++z) {//Max 18?
-  		// generate resolutions and matrixIds arrays for this WMTS
-  		resolutions[z] = size / Math.pow(2, z);
-  		matrixIds[z] = sProjection+":"+z;
-	}
-	//End: projection & tileGrid definitions
+			for (var z = 0; z < 15; ++z) { //Max 18?
+				// generate resolutions and matrixIds arrays for this WMTS
+				resolutions[z] = size / Math.pow(2, z);
+				matrixIds[z] = sProjection + ":" + z;
+			}
+			//End: projection & tileGrid definitions
 
-	//start View definitions
-	var view = new ol.View({
-		projection: sProjection,
-		center: [1891337, 9772319],
-		zoom: 5
-	});
-	//End View definitions
+			//start View definitions
+			var view = new ol.View({
+				projection: sProjection,
+				center: [1891337, 9772319],
+				zoom: 5
+			});
+			//End View definitions
 
-	//Start: Map definitions
-	var map = new ol.Map({
-		target: 'map',
-		view: view
-	});
-	//End: Map definitions
+			//Start: Map definitions
+			var map = new ol.Map({
+				target: 'map',
+				view: view
+			});
+			//End: Map definitions
 
-	//***********************
-	var _url="http://opencache.statkart.no/gatekeeper/gk/gk.open_wmts?";
-		//Start: source
-	var sourceWMTS = new ol.source.WMTS({
-		url: _url,
-		layer: 'norges_grunnkart',
-		matrixSet: 'EPSG:3857',
-        format: 'image/png',
-        projection: projection,
-        tileGrid: new ol.tilegrid.WMTS({
-          origin: ol.extent.getTopLeft(projectionExtent),
-          resolutions: resolutions,
-          matrixIds: matrixIds
-        }),
-        style: 'default'
-	});
-	//End: source
+			//***********************
+			var _url = "http://opencache.statkart.no/gatekeeper/gk/gk.open_wmts?";
+			//Start: source
+			var sourceWMTS = new ol.source.WMTS({
+				url: _url,
+				layer: 'norges_grunnkart',
+				matrixSet: 'EPSG:3857',
+				format: 'image/png',
+				projection: projection,
+				tileGrid: new ol.tilegrid.WMTS({
+					origin: ol.extent.getTopLeft(projectionExtent),
+					resolutions: resolutions,
+					matrixIds: matrixIds
+				}),
+				style: 'default'
+			});
+			//End: source
 
-	//Start: layer
-	var tileLayerWMTS = new ol.layer.Tile({
-		title: "Norges grunnkart",
-		source: sourceWMTS
-	});
-	//End: layer
-	//***********************
+			//Start: layer
+			var tileLayerWMTS = new ol.layer.Tile({
+				title: "Norges grunnkart",
+				source: sourceWMTS
+			});
+			//End: layer
+			//***********************
 
-	// Add layers to map
-	map.addLayer(tileLayerWMTS);//europa
-}
-</script>
+			// Add layers to map
+			map.addLayer(tileLayerWMTS); //norges_grunnkart
+		}
+	</script>
 </head>
+
 <body onload="init()">
-<h1>Testklient for cache fra Statens kartverk</h1>
-<div id="map" class="map"></div>
+	<h1>Testklient for cache fra Statens kartverk</h1>
+	<div id="map" class="map"></div>
 </body>
+
 </html>
