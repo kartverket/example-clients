@@ -1,64 +1,96 @@
 <html>
+
 <head>
 
-<title>Test av cache klient</title>
-<style type="text/css">
-   p {width: 500px;}
-   div.olControlMousePosition {font-family: Verdana; font-weight: bold; font-size: 0.2em; color: black;}
-   body {border: 2px; margin: 5px; padding: 0px; color: black;}
-   #map { width: 1000px; height: 600px; border: 2px solid blue;}
-</style>
-<script src="http://openlayers.org/api/OpenLayers.js"></script>
-<script type="text/javascript">
-   var url="http://opencache.statkart.no/gatekeeper/gk/gk.open?"
-   OpenLayers.Util.onImageLoadErrorColor = 'transparent';
-   //var map;
-   function init(){
-// Create map canvas
-      var map = new OpenLayers.Map( 'map', {
-      	 controls: [new OpenLayers.Control.PanZoomBar()],
-      	 projection: new OpenLayers.Projection('EPSG:32633'),
-      	 maxExtent: new OpenLayers.Bounds(-2500000.0,3500000.0,3045984.0,9045984.0),
-      	 units: "m",
-      	 maxResolution: 2708.0, 		// tilsvarer zoom level 3 (hele er 21664.0)
-      	 //numZoomLevels: 15 				// egentlig 18, men maxResolution tilsvarer zoom level 3 (følgelig er 0-3 skrudd av)
-      } );
-	  var layer_sw = new OpenLayers.Control.LayerSwitcher();
-	  map.addControl(layer_sw);
-	  layer_sw.maximizeControl();
-	  map.addControl(new OpenLayers.Control.MousePosition());	  
-	   map.addControl(new OpenLayers.Control.Navigation());	  
-      map.addControl(new OpenLayers.Control.ScaleLine());
-      map.addControl(new OpenLayers.Control.KeyboardDefaults());
-      
-// Base layers
-      var topo2 = new OpenLayers.Layer.WMS(
-      "Topografisk norgeskart2",url,
-      {layers: 'topo2', format: 'image/jpeg'},{transitionEffect: 'resize'});
+      <title>Test av cache klient</title>
+      <style type="text/css">
+            p {
+                  width: 500px;
+            }
+            
+            div.olControlMousePosition {
+                  font-family: Verdana;
+                  font-weight: bold;
+                  font-size: 0.2em;
+                  color: black;
+            }
+            
+            body {
+                  border: 2px;
+                  margin: 5px;
+                  padding: 0px;
+                  color: black;
+            }
+            
+            #map {
+                  width: 1000px;
+                  height: 600px;
+                  border: 2px solid blue;
+            }
+      </style>
+      <script src="http://openlayers.org/api/OpenLayers.js"></script>
+      <script type="text/javascript">
+            var url = "http://opencache.statkart.no/gatekeeper/gk/gk.open?"
+            OpenLayers.Util.onImageLoadErrorColor = 'transparent';
+            //var map;
+            function init() {
+                  // Create map canvas
+                  var map = new OpenLayers.Map('map', {
+                        controls: [new OpenLayers.Control.PanZoomBar()],
+                        projection: new OpenLayers.Projection('EPSG:32633'),
+                        maxExtent: new OpenLayers.Bounds(-2500000.0, 3500000.0, 3045984.0, 9045984.0),
+                        units: "m",
+                        maxResolution: 2708.0, // tilsvarer zoom level 3 (hele er 21664.0)
+                        //numZoomLevels: 15 				
+                        // egentlig 18, men maxResolution tilsvarer zoom level 3 (følgelig er 0-3 skrudd av)
+                  });
+                  var layer_sw = new OpenLayers.Control.LayerSwitcher();
+                  map.addControl(layer_sw);
+                  layer_sw.maximizeControl();
+                  map.addControl(new OpenLayers.Control.MousePosition());
+                  map.addControl(new OpenLayers.Control.Navigation());
+                  map.addControl(new OpenLayers.Control.ScaleLine());
+                  map.addControl(new OpenLayers.Control.KeyboardDefaults());
 
-      var kartdata2 = new OpenLayers.Layer.WMS(
-      "Norges grunnkart",url,
-      {layers: 'norges_grunnkart', format: 'image/jpeg'},{numZoomLevels: 10} );
+                  // Base layers
+                  var topo2 = new OpenLayers.Layer.WMS(
+                        "Topografisk norgeskart2", url, {
+                              layers: 'topo2',
+                              format: 'image/jpeg'
+                        }, {
+                              transitionEffect: 'resize'
+                        });
 
-      var toporaster2 = new OpenLayers.Layer.WMS(
-      "Toporaster2",url,
-      {layers: 'toporaster2', format: 'image/jpeg'},{numZoomLevels: 10, transitionEffect: 'resize'} );
-// Overlays
-      var sjo_hovedkart2 = new OpenLayers.Layer.WMS(
-      "Sjøkart Hovedkartserien 2",url,
-      {layers: 'sjo_hovedkart2', format: 'image/png', transparent: 'true'},{numZoomLevels: 10});
-	  sjo_hovedkart2.setIsBaseLayer(false);
-	  sjo_hovedkart2.setVisibility(false);
+                  var kartdata2 = new OpenLayers.Layer.WMS(
+                        "Norges grunnkart", url, {
+                              layers: 'norges_grunnkart',
+                              format: 'image/jpeg'
+                        }, {
+                              numZoomLevels: 10
+                        });
 
-// Add layers to map
-	  map.addLayers([topo2, kartdata2, sjo_hovedkart2, toporaster2]);
-      map.setCenter(new OpenLayers.LonLat(378604,7226208));
-   }
-</script>
+                  // Overlays
+                  var sjo_hovedkart = new OpenLayers.Layer.WMS(
+                        "Sjøkartraster Hovedkart", 'http://wms.geonorge.no/skwms1/wms.sjokartraster', {
+                              layers: 'all',
+                              format: 'image/png',
+                              transparent: true
+                        }, {
+                              numZoomLevels: 10
+                        });
+                  sjo_hovedkart.setIsBaseLayer(false);
+                  sjo_hovedkart.setVisibility(false);
+
+                  // Add layers to map
+                  map.addLayers([topo2, kartdata2, sjo_hovedkart]);
+                  map.setCenter(new OpenLayers.LonLat(378604, 7226208));
+            }
+      </script>
 </head>
-<body onload="init()">
-<h1>Testklient for cache fra Statens kartverk</h1>
-<div id="map"></div>
-</body>
-</html>
 
+<body onload="init()">
+      <h1>Testklient for cache fra Statens kartverk</h1>
+      <div id="map"></div>
+</body>
+
+</html>
