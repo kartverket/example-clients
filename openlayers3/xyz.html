@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.3.1/css/ol.css" type="text/css">
+    <style>
+        .map {
+            height: 95vh;
+            width: 100%;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.3.1/build/ol.js"></script>
+    <title>Example OSM and Norway (topo4)</title>
+</head>
+
+<body>
+    <div id="map" class="map"></div>
+    <script type="text/javascript">
+        var map = new ol.Map({
+            target: 'map',
+            layers: [
+                // OpenStreetMap layer
+                new ol.layer.Tile({
+                    source: new ol.source.OSM()
+                }),
+                // Norge topo3 layer
+                new ol.layer.Tile({
+                    source: new ol.source.XYZ({
+                        url: 'https://opencache.statkart.no/gatekeeper/gk/gk.open_gmaps?layers=topo4&zoom={z}&x={x}&y={y}',
+                        attribution: '<a href="http://www.kartverket.no/">Kartverket</a>'
+                    })
+                })
+            ],
+            view: new ol.View({
+                center: ol.proj.fromLonLat([13.41, 65.42]),
+                zoom: 5
+            })
+        });
+    </script>
+</body>
+
+</html>

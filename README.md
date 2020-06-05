@@ -16,5 +16,6 @@ to load the example for three.js, which resides in a different repository
 * [Cesium](/cesium/)
 * [Leaflet](/leaflet/)
 * [OpenLayers v2.x](/openlayers2/)
-* [OpenLayers v3.x](/openlayers3/)
+* [OpenLayers v3.x and above](/openlayers3/)
+    * [Consume a kartverket service with xyz and OSM as background](/openlayers3/xyz.html)
 * [Others](/others/)
