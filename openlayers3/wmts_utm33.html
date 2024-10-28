@@ -2,13 +2,14 @@
 <html lang="en">
 
 <head>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/openlayers/4.0.1/ol.css" type="text/css">
+  <link rel="stylesheet" href="https://openlayers.org/en/v6.15.1/css/ol.css" type="text/css">
   <style>
     .map {
-      height: 100%;
+      height: 500px;
+      width: 100%;
     }
   </style>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/openlayers/4.0.1/ol.js" type="text/javascript"></script>
+  <script src="https://openlayers.org/en/v6.15.1/build/ol.js" type="text/javascript"></script>
   <title>OpenLayers / UTM 33</title>
 </head>
 
@@ -16,43 +17,63 @@
   <h2>Map</h2>
   <div id="map" class="map"></div>
   <script type="text/javascript">
-    var sProjection = 'EPSG:32633';
-    var extent = {
-      'EPSG:3857': [20037508.34, 20037508.34, 20037508.34, 20037508.34],
-      'EPSG:32633': [-2500000, 3500000, 3045984, 9045984]
+  	/*
+  	SETUP PROJECTION VARIABLES
+  	The map data is available in several projections, see:
+  	https://cache.kartverket.no/v1/wmts/1.0.0/WMTSCapabilities.xml
+  	Choose one of: EPSG:3857|EPSG:32633|EPSG:32632|EPSG:32635
+  	*/
+    const sProjection = 'EPSG:3857'; //EPSG:3857|EPSG:32633|EPSG:32632|EPSG:32635
+    const extent = {
+    	//extents copied from https://cache.kartverket.no/v1/wmts/1.0.0/WMTSCapabilities.xml
+      'EPSG:3857': [-20037508.342789, -20037508.342789, 20037508.342789, 20037508.342789], //webmercator
+      'EPSG:32633': [-2500000, 3500000, 3045984, 9045984], //utm33n
+      'EPSG:32632': [-2000000, 3500000, 3545984, 9045984], //utm32n
+      'EPSG:32635': [-3500000, 3500000, 2045984, 9045984] //utm35n
     };
-
-    var projection = new ol.proj.Projection({
+    const matrixSetNames ={
+    	//The server uses slightly different names for these projections...
+    	'EPSG:3857' : 'webmercator',
+    	'EPSG:32633' : 'utm33n',
+    	'EPSG:32632' : 'utm32n',
+    	'EPSG:32635' : 'utm35n'
+    };
+	
+	//Setup the chosen projection in openlayers:
+    const projection = new ol.proj.Projection({
       code: sProjection,
       extent: extent[sProjection]
     });
     ol.proj.addProjection(projection);
 
+	//setup the view:
     var view = new ol.View({
       projection: projection,
       center: [352474, 6945724],
       zoom: 4
     });
 
+	//setup the tilegrid:
     var projectionExtent = projection.getExtent();
     var size = ol.extent.getWidth(projectionExtent) / 256;
-    var resolutions = [],
-      matrixIds = [];
-
+    var resolutions = [];
+    var matrixIds = [];
     for (var z = 0; z < 21; ++z) { //Max 18?
       resolutions[z] = size / Math.pow(2, z);
-      matrixIds[z] = sProjection + ":" + z;
+      matrixIds[z]=z;
     }
 
+	//create the map:
     var map = new ol.Map({
       target: 'map',
       layers: [
         new ol.layer.Tile({
-          title: "Norges grunnkart",
+          title: "landkart",
           source: new ol.source.WMTS({
-            url: "http://opencache.statkart.no/gatekeeper/gk/gk.open_wmts?gkt=9522B7345B9DB58F79351C51605635397CE41994B328463E8DF829231A08590AA9678AB96D6E1FC113B57E5BAA3F284CBC8633929A70B5118D018F0853CD0DA1",
-            layer: "norges_grunnkart",
-            matrixSet: sProjection,
+            url: "https://cache.kartverket.no/v1/wmts",
+            layer: "topo", //|topo|sjokartraster |topograatone|toporaster
+            style: "default",
+            matrixSet: matrixSetNames[sProjection],
             format: 'image/png',
             projection: projection,
             tileGrid: new ol.tilegrid.WMTS({
@@ -66,6 +87,7 @@
       ],
       view: view
     });
+    
   </script>
 </body>
 
